@@ -28,6 +28,12 @@ public class UserResource {
         return user;
     }
 
+    @GetMapping(path = "/users/query")
+    public String retrieveUserByParam(@RequestParam("badri") String name) {
+
+        return name;
+    }
+
     @PostMapping(path = "/users")
     public ResponseEntity saveUser(@RequestBody User user) {
 

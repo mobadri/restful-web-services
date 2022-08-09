@@ -29,7 +29,7 @@ public class UserResource {
     }
 
     @GetMapping(path = "/users/query")
-    public String retrieveUserByParam(@RequestParam("badri") String name) {
+    public String retrieveUserByParam(@RequestParam("param") String name) {
 
         return name;
     }

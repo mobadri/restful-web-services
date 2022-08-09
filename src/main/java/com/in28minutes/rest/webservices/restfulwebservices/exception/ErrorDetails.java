@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"code", "reason", "message", "status", "referenceError", "type", "schemaLocation"})
+@JsonPropertyOrder({"code", "reason", "message", "status", "referenceError", "@type", "@schemaLocation"})
 public class ErrorDetails {
 
     @JsonProperty("code")

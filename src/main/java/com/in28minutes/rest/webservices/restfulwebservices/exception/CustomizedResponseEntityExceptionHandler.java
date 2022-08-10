@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,9 @@ import java.util.Date;
 
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final String TRACE_ID = "|TraceID : ";
+    private static final String SPAN_ID = "|SpanID : ";
 
     @Autowired
     private Tracer tracer;
@@ -32,20 +36,34 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        ErrorDetails errorDetails = getErrorDetails(ex, status);
+
+        return new ResponseEntity<>(errorDetails, status);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
+        ErrorDetails errorDetails = getErrorDetails(ex, status);
+
+        return new ResponseEntity<>(errorDetails, status);
+    }
+
+    private ErrorDetails getErrorDetails(Exception ex, HttpStatus status) {
         ErrorDetails errorDetails = new ErrorDetails();
         errorDetails.setCode(status.toString());
         errorDetails.setReason(ex.getMessage());
         errorDetails.setMessage(
-                "|TraceID : " + tracer.currentSpan().context().traceIdString() +
-                        "|SpanID : " + tracer.currentSpan().context().spanIdString() + "|");
+                TRACE_ID + tracer.currentSpan().context().traceIdString() +
+                        SPAN_ID + tracer.currentSpan().context().spanIdString() + "|");
         errorDetails.setStatus(String.valueOf(status.value()));
         errorDetails.setType(ExceptionType.BUSINESS.toString());
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return errorDetails;
     }
 }

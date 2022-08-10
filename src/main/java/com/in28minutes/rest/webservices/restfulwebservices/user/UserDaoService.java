@@ -20,6 +20,7 @@ public class UserDaoService {
     }
 
     public List<User> findAll() {
+
         return users;
     }
 
@@ -38,5 +39,11 @@ public class UserDaoService {
 //                return user;
 //        }
 //        return null;
+    }
+
+    public User deleteById(int id) {
+        User deletedUser = users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        users.remove(deletedUser);
+        return deletedUser;
     }
 }

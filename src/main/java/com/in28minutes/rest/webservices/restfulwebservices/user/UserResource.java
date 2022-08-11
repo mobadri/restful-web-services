@@ -27,6 +27,8 @@ public class UserResource {
         if (user == null)
             throw new UserNotFoundException("id-" + id);
         return user;
+
+//        Resource<User>
     }
 
     @GetMapping(path = "/users/query")

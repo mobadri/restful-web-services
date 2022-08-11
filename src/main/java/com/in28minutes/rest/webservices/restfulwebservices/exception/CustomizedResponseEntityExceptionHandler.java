@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
+import java.util.List;
 
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,7 +43,10 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         ErrorDetails errorDetails = getErrorDetails(ex, status);
-
+        List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+        for (ObjectError error : allErrors) {
+            errorDetails.setReason(error.getDefaultMessage());
+        }
         return new ResponseEntity<>(errorDetails, status);
     }
 

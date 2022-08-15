@@ -1,5 +1,6 @@
 package com.in28minutes.rest.webservices.restfulwebservices.user;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+//@RequestMapping("/api")
 public class UserResource {
 
     @Autowired
@@ -27,6 +29,10 @@ public class UserResource {
     }
 
     @GetMapping(path = "/users/{id}")
+    @ApiOperation(
+            value = "finds user by Id ",
+            notes = "provide an id to look up specific user",
+            response = EntityModel.class)
     public EntityModel<User> retrieveUser(@PathVariable int id) {
 
         User user = service.findOne(id);

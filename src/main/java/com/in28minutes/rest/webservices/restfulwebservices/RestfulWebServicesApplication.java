@@ -5,12 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableSwagger2
+//@EnableSwagger2
 public class RestfulWebServicesApplication {
 
     public static void main(String[] args) {
